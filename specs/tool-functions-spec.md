@@ -186,12 +186,12 @@ The full season dict from `_season_data`, plus a `detected_season` boolean. Exam
 
 **Test: does calling with `season=None` return the correct season for the current month?**
 ```
-Current month: [month]
-Expected season: [season]
-Returned season: [season]
+Current month: June
+Expected season: Summmer
+Returned season: Summer
 ```
 
 **Test: does calling with `season="winter"` return winter data regardless of the current month?**
 ```
-[yes / no]
+yes
 ```
