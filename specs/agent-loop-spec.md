@@ -129,7 +129,12 @@ for tool_call in assistant_message.tool_calls:
 *The loop should stop when: (a) the LLM returns a response with no tool calls, OR (b) the MAX_TOOL_ROUNDS limit is reached. Describe how you will detect each condition and what you will return in each case.*
 
 ```
-[your answer here]
+(a) assistant_message = response.choices[0].message
+if not assistant_message.tool_calls:
+    # No tool calls — LLM has a final answer
+    ...
+I will return the content of the final answer
+(b) Keep count of every tool-calling iterations and stop when MAX_TOOL_ROUNDS is reached. I will print a debug message to see the current state of the loop and return the latest message['content'] from assistant + "Stop due to MAX_TOOL_ROUNDS limit"
 ```
 
 ---
@@ -139,7 +144,7 @@ for tool_call in assistant_message.tool_calls:
 *Once the loop exits because there are no more tool calls, how do you extract the text content from the response object? What field holds the string you should return?*
 
 ```
-[your answer here]
+messages[-1]['content'] I guess, since this is the final llm response's content. Correct me if I'm wrong.
 ```
 
 ---
@@ -151,20 +156,22 @@ for tool_call in assistant_message.tool_calls:
 **Trace of a working agent turn (what tools were called and in what order):**
 
 ```
-Query: "How should I care for my calathea?"
-Round 1 tool call: [tool name, args]
-Round 2 tool call: [tool name, args] (if any)
-Final response: [brief description]
+Query: "How do I care for my pothos?"
+Round 1 tool call: lookup_plant({'plant_name': 'pothos'})
+Round 2 tool call: get_seasonal_conditions({})
+Final response: According to the care data for your pothos, you should water it every 1–2 weeks, allowing the top inch of soil to dry out between waterings. The plant prefers low to bright indirect light and can tolerate average household humidity (40–60%). The ideal temperature range is 65–85°F (18–29°C). It's also recommended to fertilize your pothos monthly during spring and summer with a balanced liquid fertilizer.
+
+Given that it's currently summer, you should water your pothos more frequently and watch for fungus gnats if the soil stays too wet. You should also continue regular fertilizing on schedule and be mindful of direct afternoon sun, which can burn the leaves even on light-loving plants like pothos. Peak pest season is also a concern, so keep an eye out for spider mites and isolate any infected plants immediately.
 ```
 
 **What happens when you ask about a plant that isn't in the database?**
 
 ```
-[describe the behavior you observed]
+I couldn't find any information on a houseplant called "rose" in my database. Roses are typically outdoor plants and require different care than houseplants. If you're referring to an indoor rose plant, it's possible that it's not a common houseplant variety. Can you please provide more information or context about your rose plant, such as its type or how it's being cared for? I'll do my best to provide general guidance and help you troubleshoot the issue.
 ```
 
 **One thing about the tool call API that surprised you:**
 
 ```
-[your answer here]
+The LLM can infer the type of flowers even though I misspelled it
 ```
